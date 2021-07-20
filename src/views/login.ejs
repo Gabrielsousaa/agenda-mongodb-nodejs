@@ -17,7 +17,7 @@
                                     <p>Caso não tenha uma conta crie uma abaixo:</p>
                                 </h6>
 
-                                <form action="/login/register" method="POST">
+                                <form class='form-cadastro' action="/login/register" method="POST">
                                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                     <div class="form-group">
                                         <label>Seu Email </label>
@@ -38,7 +38,7 @@
                                     <p>Se você tem uma conta, faça o login abaixo: </p>
                                 </h6>
 
-                                <form action="/login/login" method="POST">
+                                <form class='form-login' action="/login/login" method="POST">
                                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                                     <div class="form-group">
                                         <label>Seu Email </label>
