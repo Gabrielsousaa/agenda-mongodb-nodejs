@@ -17,39 +17,53 @@ class Login {
     }
 
     async login() {
-        this.valida();
-        if (this.errors.length > 0) return;
-        this.user = await LoginModel.findOne({ email: this.body.email });
+        try {
+            this.valida();
+            if (this.errors.length > 0) return;
+            this.user = await LoginModel.findOne({ email: this.body.email });
 
-        if (!this.user) {
-            this.errors.push('Usuario não existe');
-            return;
+            if (!this.user) {
+                this.errors.push('Usuario não existe');
+                return;
+            }
+
+            if (!bcryptjs.compareSync(this.body.password, this.user.password)) {
+                this.errors.push('senha invalida');
+                this.user = null;
+                return;
+            }
+
+        } catch (error) {
+            console.log(error)
         }
-
-        if (!bcryptjs.compareSync(this.body.password, this.user.password)) {
-            this.errors.push('senha invalida');
-            this.user = null;
-            return;
-        }
-
 
 
     }
     async register() {
-        this.valida();
-        if (this.errors.length > 0) return;
+        try {
+            this.valida();
+            if (this.errors.length > 0) return;
 
-        this.userExists();
+            this.userExists();
 
-        if (this.errors.length > 0) return;
-        const salt = bcryptjs.genSaltSync();
-        this.body.password = bcryptjs.hashSync(this.body.password, salt);
-        this.user = await LoginModel.create(this.body);
+            if (this.errors.length > 0) return;
+            const salt = bcryptjs.genSaltSync();
+            this.body.password = bcryptjs.hashSync(this.body.password, salt);
+            this.user = await LoginModel.create(this.body);
+
+        } catch (error) {
+            console.log(error);
+        }
 
     }
     async userExists() {
-        this.user = await LoginModel.find({ email: this.body.email });
-        if (this.user) this.errors.push('Usuario já existe');
+        try {
+            this.user = await LoginModel.findOne({ email: this.body.email });
+            if (this.user) this.errors.push('Usuario já existe');
+        } catch (error) {
+            console.log(error);
+        }
+
     }
     valida() {
         this.cleanUp();

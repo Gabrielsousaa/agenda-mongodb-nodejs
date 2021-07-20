@@ -2,7 +2,7 @@ const Login = require('../models/LoginModel');
 
 exports.index = (req, res) => {
     if (req.session.user) return res.render('logado');
-    res.render('login');
+    return res.render('login');
 };
 
 exports.register = async function(req, res) {
@@ -39,24 +39,22 @@ exports.login = async function(req, res) {
         if (login.errors.length > 0) {
             req.flash('errors', login.errors);
             req.session.save(function() {
-                return res.redirect('index');
+                return res.redirect('back');
             });
             return;
         }
+
         req.flash('success', 'Logado no sistema');
         req.session.user = login.user;
         req.session.save(function() {
-            res.send(login.user);
+            return res.redirect('back');
         });
-        return res.redirect('index');
+        //return res.redirect('back'); SE UM RETURN ESTIVER FORA DO TRY ELE DA UM ERRO
 
     } catch (error) {
-        console.log(error);
         return res.render('404');
 
     }
-
-
 
 };
 
